@@ -1,4 +1,3 @@
-import 'package:ctiktok/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/views/widgets/text_input_field.dart';
