@@ -12,8 +12,10 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         alignment: Alignment.center,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'ctiktok',
@@ -54,6 +56,30 @@ class LoginScreen extends StatelessWidget {
                 obscureText: true,
                 icon: Icons.password,
               ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text('Login'),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Don\'t have an account?'),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Sign Up'),
+                ),
+              ],
             ),
           ],
         ),
