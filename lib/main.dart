@@ -6,7 +6,7 @@ import 'package:ctiktok/controllers/auth_controller.dart';
 
 import 'constants.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp().then((value) {
     Get.put(AuthController());
