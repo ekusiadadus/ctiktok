@@ -1,89 +1,78 @@
+import 'dart:io';
+
+import 'package:ctiktok/constants.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:ctiktok/models/user.dart' as model;
+import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController {
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  static AuthController instance = Get.find();
+  late Rx<File?> _pickImage;
 
-  Future<void> signUp(String email, String password) async {
+  File? get profilePic => _pickImage.value;
+
+  pickImage() async {
+    final pickedImage =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    _pickImage = Rx<File?>(File(pickedImage!.path));
+  }
+
+  // puload to firebase storage
+  Future<String> _uploadImageToStorage(File image) async {
+    var imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
+    var snapshot = await firebaseStorage
+        .ref()
+        .child('profilePics/$imageFileName')
+        .putFile(image);
+    var downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  void signUp(
+    String username,
+    String email,
+    String password,
+    File? image,
+  ) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        Get.snackbar(
-          'Error',
-          'The password provided is too weak.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+      if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+        UserCredential cred = await firebaseAuth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
         );
-      } else if (e.code == 'email-already-in-use') {
-        Get.snackbar(
-          'Error',
-          'The account already exists for that email.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+
+        if (image != null) {
+          var downloadUrl = await _uploadImageToStorage(image);
+          model.User user = model.User(
+            name: username,
+            email: email,
+            profilePic: downloadUrl,
+            uid: cred.user!.uid,
+          );
+          await fireStore
+              .collection('users')
+              .doc(cred.user!.uid)
+              .set(user.toJson());
+        } else {
+          model.User user = model.User(
+            name: username,
+            email: email,
+            profilePic: '',
+            uid: cred.user!.uid,
+          );
+          await fireStore
+              .collection('users')
+              .doc(cred.user!.uid)
+              .set(user.toJson());
+        }
+      } else {
+        Get.snackbar('Error', 'Please fill all the fields');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Error Creating an Account', e.toString());
     }
   }
-
-  Future<void> login(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar(
-          'Error',
-          'No user found for that email.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar(
-          'Error',
-          'Wrong password provided for that user.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      }
-    }
-  }
-
-  Future<void> logout() async {
-    await _auth.signOut();
-  }
-
-  Future<void> resetPassword(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
-  }
-
-  Future<void> updateProfile(String name, String bio) async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      await _firestore.collection('users').doc(user.uid).set({
-        'name': name,
-        'bio': bio,
-      });
-    }
-  }
-
-  Future<void> updateProfileImage
+}
