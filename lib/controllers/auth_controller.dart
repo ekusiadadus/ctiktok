@@ -75,4 +75,19 @@ class AuthController extends GetxController {
       Get.snackbar('Error Creating an Account', e.toString());
     }
   }
+
+  void login(String email, String password) async {
+    try {
+      if (email.isNotEmpty && password.isNotEmpty) {
+        await firebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } else {
+        Get.snackbar('Error', 'Please fill all the fields');
+      }
+    } catch (e) {
+      Get.snackbar('Error Logging In', e.toString());
+    }
+  }
 }
