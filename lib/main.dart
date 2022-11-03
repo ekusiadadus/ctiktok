@@ -1,3 +1,4 @@
+import 'package:ctiktok/views/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -13,11 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'ctiktok',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
-        ),
-      home: const Text('Hello World'),
+      ),
+      home: const LoginScreen(),
     );
   }
 }
