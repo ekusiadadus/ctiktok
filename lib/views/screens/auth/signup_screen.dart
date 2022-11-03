@@ -1,3 +1,4 @@
+import 'package:ctiktok/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/views/widgets/text_input_field.dart';
@@ -34,35 +35,28 @@ class SignupScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 15,
             ),
-
-            Stack(
-              children: const [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey,
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Colors.black,
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+            Stack(children: [
+              const CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.grey,
+              ),
+              Positioned(
+                bottom: -10,
+                left: 60,
+                child: IconButton(
+                  onPressed: () => authController.pickImage(),
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
                   ),
                 ),
-              ]
-            ),
-
+              ),
+            ]),
             const SizedBox(
               height: 15,
             ),
-
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -75,7 +69,6 @@ class SignupScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -99,13 +92,18 @@ class SignupScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => authController.signUp(
+                  _usernameController.text,
+                  _emailController.text,
+                  _passwordController.text,
+                  authController.profilePic,
+                ),
                 child: const Text('Sign Up'),
               ),
             ),
