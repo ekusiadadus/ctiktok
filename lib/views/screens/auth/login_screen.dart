@@ -34,10 +34,25 @@ class LoginScreen extends StatelessWidget {
               height: 25,
             ),
             Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: TextInputField(
                 hintText: 'Email',
                 controller: _emailController,
                 icon: Icons.email,
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextInputField(
+                hintText: 'Password',
+                controller: _passwordController,
+                obscureText: true,
+                icon: Icons.password,
               ),
             ),
           ],
