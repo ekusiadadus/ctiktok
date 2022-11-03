@@ -1,12 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/views/widgets/text_input_field.dart';
-import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatelessWidget {
+  SignupScreen({Key? key}) : super(key: key);
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const Text(
-              'Login',
+              'Sign Up',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
@@ -35,6 +36,46 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(
               height: 25,
             ),
+
+            Stack(
+              children: const [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.black,
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ]
+            ),
+
+            const SizedBox(
+              height: 15,
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextInputField(
+                hintText: 'Username',
+                controller: _usernameController,
+                icon: Icons.person,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -45,7 +86,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 15,
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -65,7 +106,7 @@ class LoginScreen extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () {},
-                child: const Text('Login'),
+                child: const Text('Sign Up'),
               ),
             ),
             const SizedBox(
@@ -74,10 +115,10 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Don\'t have an account?'),
+                const Text('Already have an account?'),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('Sign Up'),
+                  child: const Text('Login'),
                 ),
               ],
             ),

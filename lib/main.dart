@@ -1,4 +1,5 @@
 import 'package:ctiktok/views/screens/auth/login_screen.dart';
+import 'package:ctiktok/views/screens/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
       ),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
