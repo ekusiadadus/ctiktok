@@ -1,26 +1,44 @@
 import 'dart:io';
 
 import 'package:ctiktok/constants.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:ctiktok/views/screens/auth/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:ctiktok/models/user.dart' as model;
 import 'package:image_picker/image_picker.dart';
 
+import '../views/screens/home_screen.dart';
+
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
+  late Rx<User?> _user;
   late Rx<File?> _pickImage;
 
   File? get profilePic => _pickImage.value;
 
+  @override
+  void onReady() {
+    super.onReady();
+    _user = Rx<User?>(firebaseAuth.currentUser);
+    _user.bindStream(firebaseAuth.authStateChanges());
+    ever(_user, _setInitialScreen);
+  }
+
+  _setInitialScreen(User? user) {
+    if (user == null) {
+      Get.offAll(() => LoginScreen());
+    } else {
+      Get.offAll(() => HomeScreen());
+    }
+  }
+
   pickImage() async {
     final pickedImage =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     _pickImage = Rx<File?>(File(pickedImage!.path));
   }
 
-  // puload to firebase storage
+  // upload to firebase storage
   Future<String> _uploadImageToStorage(File image) async {
     var imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
     var snapshot = await firebaseStorage
