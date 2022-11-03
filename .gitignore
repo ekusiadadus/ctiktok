@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Custom
+# Google API key and other resources
+GoogleService-Info.plist
+google-services.json
+# Plugins (already resolved through pubspec.yaml)
+.flutter-plugins
