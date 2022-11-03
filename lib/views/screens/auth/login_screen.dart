@@ -64,7 +64,10 @@ class LoginScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => authController.login(
+                  _emailController.text,
+                  _passwordController.text,
+                ),
                 child: const Text('Login'),
               ),
             ),
