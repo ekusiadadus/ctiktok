@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:get/instance_manager.dart';
+import 'package:ctiktok/controllers/upload_video_controller.dart';
 import 'package:ctiktok/views/widgets/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -20,8 +21,10 @@ class ConfirmScreen extends StatefulWidget {
 
 class _ConfirmScreenState extends State<ConfirmScreen> {
   late VideoPlayerController controller;
-  TextEditingController songController = TextEditingController();
-  TextEditingController captionController = TextEditingController();
+  TextEditingController _songController = TextEditingController();
+  TextEditingController _captionController = TextEditingController();
+  UploadVideoController uploadVideoController =
+      Get.put(UploadVideoController());
 
   @override
   void initState() {
@@ -57,7 +60,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     width: MediaQuery.of(context).size.width - 20,
                     child: TextInputField(
-                      controller: songController,
+                      controller: _songController,
                       hintText: 'Song',
                       icon: Icons.music_note,
                     ),
@@ -67,14 +70,18 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     width: MediaQuery.of(context).size.width - 20,
                     child: TextInputField(
-                      controller: captionController,
+                      controller: _captionController,
                       hintText: 'Caption',
                       icon: Icons.closed_caption,
                     ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => uploadVideoController.uploadVideo(
+                      _songController.text,
+                      _captionController.text,
+                      widget.videoPath,
+                    ),
                     child: const Text(
                       'Post',
                       style: TextStyle(
