@@ -60,6 +60,19 @@ class UploadVideoScreen extends StatelessWidget {
                   pickVideo(ImageSource.gallery, context);
                 },
               ),
+              ListTile(
+                leading: const Icon(
+                  Icons.cancel,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         );
