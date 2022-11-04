@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../constants.dart';
+import 'confirm_screen.dart';
 
 class UploadVideoScreen extends StatelessWidget {
   const UploadVideoScreen({Key? key}) : super(key: key);
+
+  pickVideo(ImageSource src, BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickVideo(source: src);
+    if (pickedFile != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ConfirmScreen(),
+      ));
+    }
+  }
+
+  takeVideo(BuildContext context) {
+    pickVideo(ImageSource.camera, context);
+  }
 
   showOptionsDialog(BuildContext context) {
     showDialog(
@@ -11,33 +27,41 @@ class UploadVideoScreen extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           backgroundColor: backgroundColor,
-          title:
-              const Text('Upload Video', style: TextStyle(color: Colors.white)),
-          content: const Text('Choose an option',
-              style: TextStyle(color: Colors.white)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child:
-                  const Text('Cancel', style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child:
-                  const Text('Record', style: TextStyle(color: Colors.white)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child:
-                  const Text('Upload', style: TextStyle(color: Colors.white)),
-            ),
-          ],
+          title: const Text(
+            'Upload Video',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Take a video',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  takeVideo(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.video_library,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Choose from gallery',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  pickVideo(ImageSource.gallery, context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
