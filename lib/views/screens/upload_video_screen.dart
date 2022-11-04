@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,7 +14,10 @@ class UploadVideoScreen extends StatelessWidget {
     final pickedFile = await picker.pickVideo(source: src);
     if (pickedFile != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ConfirmScreen(),
+        builder: (context) => ConfirmScreen(
+          videoFile: File(pickedFile.path),
+          videoPath: pickedFile.path,
+        ),
       ));
     }
   }
