@@ -1,3 +1,4 @@
+import 'package:ctiktok/views/widgets/custom_icon.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -46,24 +47,24 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.search, size: 30),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add, size: 30),
-            label: 'Add',
+            icon: CustomIcon(),
+            label: '',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.favorite, size: 30),
             label: 'Favorite',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 30),
             label: 'Profile',
           ),
