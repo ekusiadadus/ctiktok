@@ -16,6 +16,8 @@ class AuthController extends GetxController {
 
   File? get profilePic => _pickImage.value;
 
+  User get user => _user.value!;
+
   @override
   void onReady() {
     super.onReady();
