@@ -23,6 +23,7 @@ class AuthController extends GetxController {
     super.onReady();
     _user = Rx<User?>(firebaseAuth.currentUser);
     _user.bindStream(firebaseAuth.authStateChanges());
+    _pickImage = Rx<File?>(null);
     ever(_user, _setInitialScreen);
   }
 
