@@ -27,8 +27,8 @@ class CommentController extends GetxController {
         (QuerySnapshot query) {
           List<Comment> retVal = [];
           for (var element in query.docs) {
-              retVal.add(Comment.fromSnapshot(element));
-            }
+            retVal.add(Comment.fromSnapshot(element));
+          }
           return retVal;
         },
       ),
@@ -72,6 +72,40 @@ class CommentController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error sending comments', e.toString());
+    }
+  }
+
+  likeComment(String id) async {
+    var uid = authController.user.uid;
+    DocumentSnapshot doc = await fireStore
+        .collection('videos')
+        .doc(_postId)
+        .collection('comments')
+        .doc(id)
+        .get();
+
+    if ((doc.data()! as dynamic)['likes'].contains(uid)) {
+      await fireStore
+          .collection('videos')
+          .doc(_postId)
+          .collection('comments')
+          .doc(id)
+          .update(
+        {
+          'likes': FieldValue.arrayRemove([uid])
+        },
+      );
+    } else {
+      await fireStore
+          .collection('videos')
+          .doc(_postId)
+          .collection('comments')
+          .doc(id)
+          .update(
+        {
+          'likes': FieldValue.arrayUnion([uid])
+        },
+      );
     }
   }
 }
