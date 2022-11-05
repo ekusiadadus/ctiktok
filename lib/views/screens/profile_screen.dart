@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return GetBuilder<ProfileController>(
         init: ProfileController(),
         builder: (controller) {
+          if (controller.user.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.black12,
@@ -171,10 +177,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Center(
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if (widget.uid == authController.user.uid) {
+                                authController.signOut();
+                              }
+                            },
                             child: Text(
-                              'Sign Out',
-                              style: TextStyle(
+                              widget.uid == authController.user.uid
+                                  ? 'Sign Out'
+                                  : controller.user['isFollowing']
+                                      ? 'Unfollow'
+                                      : 'Follow',
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
