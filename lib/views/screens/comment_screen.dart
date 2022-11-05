@@ -1,3 +1,4 @@
+import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/controllers/comment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ class CommentScreen extends StatelessWidget {
                         title: Row(
                           children: [
                             Text(
-                              comment.username,
+                              "${comment.username}  ",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
@@ -75,10 +76,16 @@ class CommentScreen extends StatelessWidget {
                           ],
                         ),
                         trailing: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.favorite_border,
-                            color: Colors.white,
+                          onPressed: () => commentController.likeComment(
+                            comment.id,
+                          ),
+                          icon: Icon(
+                            Icons.favorite,
+                            color: comment.likes.contains(
+                              authController.user.uid,
+                            )
+                                ? Colors.red
+                                : Colors.white,
                           ),
                         ),
                       );
