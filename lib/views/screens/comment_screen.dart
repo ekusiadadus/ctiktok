@@ -1,39 +1,130 @@
+import 'package:ctiktok/controllers/comment_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-class CommentSceen extends StatelessWidget {
-  const CommentSceen({Key? key}) : super(key: key);
+class CommentScreen extends StatelessWidget {
+  final String id;
+
+  CommentScreen({Key? key, required this.id}) : super(key: key);
+
+  final TextEditingController _commentController = TextEditingController();
+  CommentController commentController = Get.put(CommentController());
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    commentController.updatePostId(id);
     return Scaffold(
-      body: Scaffold(
-        body: SingleChildScrollView(
-          child: SizedBox(
-            width: size.width,
-            height: size.height,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: Column(
+            children: [
+              Expanded(
+                child: Obx(() {
+                  return ListView.builder(
+                    itemCount: commentController.comments.length,
                     itemBuilder: (context, index) {
+                      final comment = commentController.comments[index];
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
-                              'https://images.unsplash.com/photo-1616166336303-8e1f2f9b9b1a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
+                            comment.profilePic,
+                          ),
                         ),
-                        title: Text('User Name'),
-                        subtitle: Text('Comment'),
+                        title: Row(
+                          children: [
+                            Text(
+                              comment.username,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.red,
+                              ),
+                            ),
+                            Text(
+                              comment.comment,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              timeago.format(
+                                comment.datePublished.toDate(),
+                              ),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              '${comment.likes.length} like',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
                         trailing: IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.more_vert),
+                          icon: const Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
                         ),
                       );
                     },
+                  );
+                }),
+              ),
+              const Divider(),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'profile image',
                   ),
-                )
-              ],
-            ),
+                ),
+                title: TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                    hintText: 'Add a comment...',
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+                trailing: TextButton(
+                  onPressed: () =>
+                      commentController.postComment(_commentController.text),
+                  child: const Text(
+                    'Send',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
