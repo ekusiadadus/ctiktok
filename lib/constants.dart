@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctiktok/controllers/auth_controller.dart';
+import 'package:ctiktok/views/screens/profile_screen.dart';
 import 'package:ctiktok/views/screens/search_screen.dart';
 import 'package:ctiktok/views/screens/upload_video_screen.dart';
 import 'package:ctiktok/views/screens/video_screen.dart';
@@ -12,7 +13,7 @@ List pages = [
   SearchScreen(),
   const UploadVideoScreen(),
   Text('Messages'),
-  Text('Profile'),
+  ProfileScreen(uid: authController.user.uid)
 ];
 
 // COLORS
