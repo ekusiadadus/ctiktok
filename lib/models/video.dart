@@ -9,7 +9,7 @@ class Video {
   String profilePicUrl;
   String uid;
   List likes;
-  List comments;
+  int commentCount;
   int shareCount;
   String id;
   DateTime timestamp;
@@ -23,7 +23,7 @@ class Video {
     required this.profilePicUrl,
     required this.uid,
     required this.likes,
-    required this.comments,
+    required this.commentCount,
     required this.shareCount,
     required this.id,
     required this.timestamp,
@@ -38,7 +38,7 @@ class Video {
         'profilePicUrl': profilePicUrl,
         'uid': uid,
         'likes': likes,
-        'comments': comments,
+        'commentCount': commentCount,
         'shareCount': shareCount,
         'timestamp': timestamp,
         'id': id,
@@ -55,7 +55,7 @@ class Video {
       profilePicUrl: data['profilePicUrl'],
       uid: data['uid'],
       likes: data['likes'],
-      comments: data['comments'],
+      commentCount: data['commentCount'],
       shareCount: data['shareCount'],
       timestamp: data['timestamp'].toDate(),
       id: data['id'],

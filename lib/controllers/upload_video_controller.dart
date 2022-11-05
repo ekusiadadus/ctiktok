@@ -49,19 +49,18 @@ class UploadVideoController extends GetxController {
       int docCount = allDocs.docs.length;
       String videoUrl =
           await _uploadVideoToFirebaseStorage("Video $docCount", videoPath);
-      String thumbnailUrl = await _uploadThumbnailToFirebaseStorage(
-          "Thumbnail $docCount", videoPath);
+      String thumbnailUrl =
+          await _uploadThumbnailToFirebaseStorage("Video $docCount", videoPath);
       model.Video video = model.Video(
         songName: songName,
         caption: caption,
         videoUrl: videoUrl,
         thumbnailUrl: thumbnailUrl,
-        username: (userDoc.data()! as Map<String, dynamic>)['username'],
-        profilePicUrl:
-            (userDoc.data()! as Map<String, dynamic>)['profilePicUrl'],
+        username: (userDoc.data()! as Map<String, dynamic>)['name'],
+        profilePicUrl: (userDoc.data()! as Map<String, dynamic>)['profilePic'],
         uid: uid,
         likes: [],
-        comments: [],
+        commentCount: 0,
         shareCount: 0,
         timestamp: DateTime.now(),
         id: "Video $docCount",
