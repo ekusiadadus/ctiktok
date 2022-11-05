@@ -1,4 +1,5 @@
 import 'package:ctiktok/controllers/search_controller.dart';
+import 'package:ctiktok/views/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -41,14 +42,18 @@ class SearchScreen extends StatelessWidget {
                 itemCount: searchController.users.length,
                 itemBuilder: (context, index) {
                   User user = searchController.users[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.profilePic),
-                    ),
-                    title: Text(
-                      user.name,
-                      style: const TextStyle(
-                        color: Colors.white,
+                  return InkWell(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(uid: user.uid))),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(user.profilePic),
+                      ),
+                      title: Text(
+                        user.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   );
