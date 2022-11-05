@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ctiktok/constants.dart';
 import 'package:ctiktok/views/widgets/text_input_field.dart';
 
+import 'login_screen.dart';
+
 class SignupScreen extends StatelessWidget {
   SignupScreen({Key? key}) : super(key: key);
 
@@ -114,7 +116,11 @@ class SignupScreen extends StatelessWidget {
               children: [
                 const Text('Already have an account?'),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  ),
                   child: const Text('Login'),
                 ),
               ],

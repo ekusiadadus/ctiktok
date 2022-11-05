@@ -180,6 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () {
                               if (widget.uid == authController.user.uid) {
                                 authController.signOut();
+                              } else {
+                                profileController.followUser();
                               }
                             },
                             child: Text(
