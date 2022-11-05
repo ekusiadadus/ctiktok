@@ -78,4 +78,51 @@ class ProfileController extends GetxController {
     };
     update();
   }
+
+  followUser() async {
+    var doc = await fireStore
+        .collection('users')
+        .doc(_uid.value)
+        .collection('followers')
+        .doc(authController.user.uid)
+        .get();
+
+    if (!doc.exists) {
+      await fireStore
+          .collection('users')
+          .doc(_uid.value)
+          .collection('followers')
+          .doc(authController.user.uid)
+          .set({});
+      await fireStore
+          .collection('users')
+          .doc(authController.user.uid)
+          .collection('following')
+          .doc(_uid.value)
+          .set({});
+      _user.value.update(
+        'followers',
+        (value) => (int.parse(value) + 1).toString(),
+      );
+    } else {
+      await fireStore
+          .collection('users')
+          .doc(_uid.value)
+          .collection('followers')
+          .doc(authController.user.uid)
+          .delete();
+      await fireStore
+          .collection('users')
+          .doc(authController.user.uid)
+          .collection('following')
+          .doc(_uid.value)
+          .delete();
+      _user.value.update(
+        'followers',
+        (value) => (int.parse(value) - 1).toString(),
+      );
+    }
+    _user.value.update('isFollowing', (value) => !value);
+    update();
+  }
 }
