@@ -107,7 +107,7 @@ class VideoScreen extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
                                     data.username,
@@ -163,7 +163,7 @@ class VideoScreen extends StatelessWidget {
                                         Icons.favorite,
                                         size: 40,
                                         color: data.likes.contains(
-                                                authController.user.uid)
+                                            authController.user.uid)
                                             ? Colors.red
                                             : Colors.white,
                                       ),
@@ -183,7 +183,9 @@ class VideoScreen extends StatelessWidget {
                                     InkWell(
                                       onTap: () => Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => CommentScreen(id: data.id,),
+                                          builder: (context) => CommentScreen(
+                                            id: data.id,
+                                          ),
                                         ),
                                       ),
                                       child: const Icon(
@@ -223,10 +225,10 @@ class VideoScreen extends StatelessWidget {
                                   ],
                                 ),
                                 CircleAnimation(
-                                  color: Colors.white,
-                                  duration: const Duration(milliseconds: 5000),
-                                  radius: 25,
                                   child: buildMusicAlbum(data.profilePicUrl),
+                                  color: Colors.white,
+                                  duration: const Duration(seconds: 2),
+                                  radius: 20,
                                 ),
                               ],
                             ),
