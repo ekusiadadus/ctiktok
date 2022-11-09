@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../constants.dart';
 import 'confirm_screen.dart';
+import 'package:get/get.dart';
 
 class UploadVideoScreen extends StatelessWidget {
   const UploadVideoScreen({Key? key}) : super(key: key);
@@ -12,14 +13,16 @@ class UploadVideoScreen extends StatelessWidget {
   pickVideo(ImageSource src, BuildContext context) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickVideo(source: src);
-    if (pickedFile != null) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ConfirmScreen(
-          videoFile: File(pickedFile.path),
-          videoPath: pickedFile.path,
-        ),
-      ));
+    if (pickedFile == null) {
+      Get.snackbar('Error', 'No video selected');
+      return;
     }
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ConfirmScreen(
+        videoFile: File(pickedFile.path),
+        videoPath: pickedFile.path,
+      ),
+    ));
   }
 
   takeVideo(BuildContext context) {
