@@ -11,7 +11,8 @@ class UploadVideoScreen extends StatelessWidget {
   const UploadVideoScreen({Key? key}) : super(key: key);
 
   pickVideo(ImageSource src, BuildContext context) async {
-    final video = await ImagePicker().pickVideo(source: src);
+    // final video = await ImagePicker().pickVideo(source: src);
+    final video = await ImagePicker.platform.pickVideo(source: src);
     if (video == null) {
       Get.snackbar("error choose videos", "");
     }
