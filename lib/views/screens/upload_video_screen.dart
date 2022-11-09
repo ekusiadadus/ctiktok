@@ -5,86 +5,76 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../constants.dart';
 import 'confirm_screen.dart';
-import 'package:get/get.dart';
 
 class UploadVideoScreen extends StatelessWidget {
   const UploadVideoScreen({Key? key}) : super(key: key);
 
   pickVideo(ImageSource src, BuildContext context) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickVideo(source: src);
-    if (pickedFile == null) {
-      Get.snackbar('Error', 'No video selected');
-      return;
+    final video = await ImagePicker().pickVideo(source: src);
+    if (video != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ConfirmScreen(
+            videoFile: File(video.path),
+            videoPath: video.path,
+          ),
+        ),
+      );
     }
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ConfirmScreen(
-        videoFile: File(pickedFile.path),
-        videoPath: pickedFile.path,
-      ),
-    ));
-  }
-
-  takeVideo(BuildContext context) {
-    pickVideo(ImageSource.camera, context);
   }
 
   showOptionsDialog(BuildContext context) {
-    showDialog(
+    return showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: backgroundColor,
-          title: const Text(
-            'Upload Video',
-            style: TextStyle(color: Colors.white),
+      builder: (context) => SimpleDialog(
+        children: [
+          SimpleDialogOption(
+            onPressed: () => pickVideo(ImageSource.gallery, context),
+            child: Row(
+              children: const [
+                Icon(Icons.image),
+                Padding(
+                  padding: EdgeInsets.all(7.0),
+                  child: Text(
+                    'Gallery',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.white,
+          SimpleDialogOption(
+            onPressed: () => pickVideo(ImageSource.camera, context),
+            child: Row(
+              children: const [
+                Icon(Icons.camera_alt),
+                Padding(
+                  padding: EdgeInsets.all(7.0),
+                  child: Text(
+                    'Camera',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
-                title: const Text(
-                  'Take a video',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  takeVideo(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.video_library,
-                  color: Colors.white,
-                ),
-                title: const Text(
-                  'Choose from gallery',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  pickVideo(ImageSource.gallery, context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.cancel,
-                  color: Colors.white,
-                ),
-                title: const Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+              ],
+            ),
           ),
-        );
-      },
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Row(
+              children: const [
+                Icon(Icons.cancel),
+                Padding(
+                  padding: EdgeInsets.all(7.0),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -92,26 +82,25 @@ class UploadVideoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: InkWell(
-        onTap: () => showOptionsDialog(context),
-        child: Container(
-          height: 50,
-          width: 190,
-          decoration: BoxDecoration(
-            color: buttonColor,
-          ),
-          child: const Center(
-            child: Text(
-              'Upload Video',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        child: InkWell(
+          onTap: () => showOptionsDialog(context),
+          child: Container(
+            width: 190,
+            height: 50,
+            decoration: BoxDecoration(color: buttonColor),
+            child: const Center(
+              child: Text(
+                'Upload Video',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
         ),
-      )),
+      ),
     );
   }
 }
