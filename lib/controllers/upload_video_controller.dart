@@ -3,75 +3,75 @@ import 'package:ctiktok/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:video_compress/video_compress.dart';
-import 'package:ctiktok/models/video.dart' as model;
+import 'package:ctiktok/models/video.dart';
 
 class UploadVideoController extends GetxController {
   _compressVideo(String videoPath) async {
     final compressedVideo = await VideoCompress.compressVideo(
       videoPath,
       quality: VideoQuality.MediumQuality,
-      deleteOrigin: false,
     );
     return compressedVideo!.file;
   }
 
-  Future<String> _uploadVideoToFirebaseStorage(
-      String id, String videoPath) async {
+  Future<String> _uploadVideoToStorage(String id, String videoPath) async {
     Reference ref = firebaseStorage.ref().child('videos').child(id);
+
     UploadTask uploadTask = ref.putFile(await _compressVideo(videoPath));
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
     return downloadUrl;
   }
 
-  _getVideoThumbnail(String videoPath) async {
-    final thumbnail = await VideoCompress.getFileThumbnail(
-      videoPath,
-    );
+  _getThumbnail(String videoPath) async {
+    final thumbnail = await VideoCompress.getFileThumbnail(videoPath);
     return thumbnail;
   }
 
-  Future<String> _uploadThumbnailToFirebaseStorage(
-      String id, String videoPath) async {
+  Future<String> _uploadImageToStorage(String id, String videoPath) async {
     Reference ref = firebaseStorage.ref().child('thumbnails').child(id);
-    UploadTask uploadTask = ref.putFile(await _getVideoThumbnail(videoPath));
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    UploadTask uploadTask = ref.putFile(await _getThumbnail(videoPath));
+    TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
     return downloadUrl;
   }
 
+  // upload video
   uploadVideo(String songName, String caption, String videoPath) async {
     try {
       String uid = firebaseAuth.currentUser!.uid;
       DocumentSnapshot userDoc =
-          await fireStore.collection('users').doc(uid).get();
+      await fireStore.collection('users').doc(uid).get();
+      // get id
       var allDocs = await fireStore.collection('videos').get();
-      int docCount = allDocs.docs.length;
-      String videoUrl =
-          await _uploadVideoToFirebaseStorage("Video $docCount", videoPath);
-      String thumbnailUrl =
-          await _uploadThumbnailToFirebaseStorage("Video $docCount", videoPath);
-      model.Video video = model.Video(
-        songName: songName,
-        caption: caption,
-        videoUrl: videoUrl,
-        thumbnailUrl: thumbnailUrl,
+      int len = allDocs.docs.length;
+      String videoUrl = await _uploadVideoToStorage("Video $len", videoPath);
+      String thumbnail = await _uploadImageToStorage("Video $len", videoPath);
+
+      Video video = Video(
         username: (userDoc.data()! as Map<String, dynamic>)['name'],
-        profilePicUrl: (userDoc.data()! as Map<String, dynamic>)['profilePic'],
         uid: uid,
+        id: "Video $len",
         likes: [],
         commentCount: 0,
         shareCount: 0,
+        songName: songName,
+        caption: caption,
+        videoUrl: videoUrl,
+        profilePicUrl: (userDoc.data()! as Map<String, dynamic>)['profilePic'],
+        thumbnailUrl: thumbnail,
         timestamp: DateTime.now(),
-        id: "Video $docCount",
       );
-      await fireStore
-          .collection('videos')
-          .doc("Video $docCount")
-          .set(video.toJson());
+
+      await fireStore.collection('videos').doc('Video $len').set(
+        video.toJson(),
+      );
       Get.back();
     } catch (e) {
-      Get.snackbar('Error uploading videos', e.toString());
+      Get.snackbar(
+        'Error Uploading Video',
+        e.toString(),
+      );
     }
   }
 }
