@@ -15,6 +15,7 @@ class UploadVideoScreen extends StatelessWidget {
     final video = await ImagePicker.platform.pickVideo(source: src);
     if (video == null) {
       Get.snackbar("error choose videos", "");
+      return;
     }
     if (video != null) {
       Navigator.of(context).push(
